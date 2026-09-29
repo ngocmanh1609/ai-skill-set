@@ -1,0 +1,35 @@
+{
+  "skill_name": "sprint-triage",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "walk through the todo and backlog stories for the current sprint, tell me what's actually ready and who of chuu/don/tiger/me should take each one. don't change anything in shortcut",
+      "expected_output": "Loads .claude/sprint-triage.yml and passes the health check; reads only tracker-shortcut.md and host-github.md; produces the report-template report with a readiness verdict and evidence per story (API contract check, newest PM comment, blockers) and an owner proposal with one evidence line each. Calls no tracker write tools.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Chuu is on leave from Wednesday until the end of the sprint. Re-propose owners for the stories in To Do in the current sprint, then assign them once I approve.",
+      "expected_output": "Uses the stated availability without asking again; moves Chuu's picks to others and justifies each; shows a numbered change list and waits for approval before any owner update; after approval, re-fetches and verifies.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "we plan sprint 19 on thursday. what does jui need to answer before then? draft the questions as comments but don't post them yet",
+      "expected_output": "Resolves the next (unstarted) sprint, focuses on concerns, drafts one comment per story that mentions the scope owner from the config with a concrete question, and posts nothing.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "jui added a bunch of stories to the sprint since planning. walk me through the new ones and tell me who could take them",
+      "expected_output": "Picks mid-sprint mode because a report with a snapshot for the current sprint exists; lists Added / Removed / Reopened against that snapshot (all states, not just To Do/Backlog); does not re-triage unchanged stories or propose changing existing owners; computes days left with workdays.sh and room per member including owned To Do stories; says whether the ready new stories fit, and if not drafts a swap question for the PM; saves a -mid report with a new snapshot.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "triage our current sprint please (run from a repo that has no .claude/sprint-triage.yml)",
+      "expected_output": "Says the config is missing and asks whether to create it; detects the tracker from connected MCP tools and the code host from the git remote; discovers team, states and people through the adapter; shows the full YAML and whether the path is gitignored; writes it only after the user agrees; runs the health check before triaging.",
+      "files": []
+    }
+  ]
+}
