@@ -8,8 +8,9 @@ mode answers three questions, and nothing more:
 
 It doesn't re-triage stories that were already checked, and it doesn't touch owners the
 team already chose. Under the Scrum Guide, scope "may be clarified and renegotiated with
-the Product Owner" during a sprint. If the new work doesn't fit, the answer is a question
-for the PM, not silent overload.
+the Product Owner" during a sprint. If the new work doesn't fit, say so plainly in the
+report instead of overloading people silently. The user decides whether and how to raise
+it with the PM, so don't draft a comment about it.
 
 ## Contents
 - When it runs
@@ -77,39 +78,49 @@ These are rough numbers for a conversation, not a plan. Show them rounded to hal
 Compare the total size of the **ready** Added and Reopened stories with the team's total
 positive room.
 - **Fits:** suggest owners (see below).
-- **Doesn't fit:** say by how many days. Then propose what could move out of the sprint,
-  in this order:
+- **Doesn't fit:** say by how many days. Then list in the report what could move out of
+  the sprint, in this order:
   1. stories in the ready column that turn out not to be ready (blocked, on hold)
   2. unstarted stories with the lowest priority
   3. the largest unstarted story that isn't needed for the sprint goal
 
-  Write it as a question for the scope owner ("To add 80701 (M), we could move 80513 (S)
-  and 80516 (M) out. OK?"), drafted as a comment on the added story. Don't move anything
-  out without that answer and the user's approval.
-- **Added stories that aren't ready:** flag them to the PM with the specific gap, and
-  don't give them an owner.
+  This is information for the user, not a tracker comment. Don't move anything out
+  unless the user asks.
+- **Added stories that aren't ready:** list them under the story concerns with the
+  specific gap, and don't give them an owner.
 
 ## Owners
 
 - **Keep existing owners.** Don't propose changing an owner the team already set, unless
   the user asks to rebalance.
 - Suggest owners for the new ready stories using room first (who can actually absorb it),
-  then affinity from the assignment guide.
+  then affinity from the assignment guide. A Ready story in Backlog that gets an owner
+  also moves to the ready column in the same change (assignment guide, section 1).
+- The same applies to an already-owned Ready story still in Backlog: propose the
+  `backlog → ready` move, keeping its owner. This covers a blocker that cleared since
+  the last run.
 - If someone's room is already negative, say so as information. Suggest moving one of
   their unstarted stories to someone else only when the user asks to rebalance.
 
 ## Report
 
-A short version of the report template:
+A short version of the report template. The order matters: information first, then the
+two parts the user acts on, with the owners last.
 1. **Context:** sprint, days left, the snapshot you compared against (date), and the
    fallback if it was used.
 2. **What changed:** Added / Removed / Reopened, with one line each.
 3. **Readiness of the added stories:** same verdicts and evidence as a full triage.
-4. **Capacity:** one row per member: days left, available, committed, room.
-5. **Fit:** fits, or short by N days, plus the swap question for the PM.
-6. **Suggested owners** for the new ready stories, with evidence.
-7. **Open PM questions:** carried over from the snapshot report.
-8. **Suggested tracker changes**, then a **new snapshot** after applying.
+4. **Capacity and fit:** one row per member (days left, available, committed, room).
+   Then either "fits" or "short by N days", with what could move out. Report only; no
+   comment.
+5. **Story concerns:** open PM questions about specific stories, new ones plus those
+   carried over from the snapshot report, each with its evidence and the exact question.
+6. **Config notes**, if any.
+7. **Suggested owners (last):** one row per story with the owner and one line of evidence,
+   each person's now / next order, then the numbered change list (owners and state moves)
+   for approval.
+
+End with the snapshot block, and rewrite it after applying.
 
 Save it as a new file (`<sprint id>-<YYYY-MM-DD>-mid.md`), so the next mid-sprint run
 compares against the latest state.

@@ -13,6 +13,15 @@ unowned unless the user asks. An owned story in the ready column looks startable
 someone will start it. If the user wants a Not-ready story owned anyway, give it to the
 person who owns the related ready work, and mark it "starts after <condition>".
 
+**An owner on a Ready story moves it to the ready column.** When you suggest an owner
+for a **Ready** story that sits in `backlog`, the same change also moves it
+`backlog → ready`. A Ready story with an owner left in Backlog is invisible to the person
+who should pick it up. The now / next order in the report tells each person what to
+start first, so the ready column can hold their whole queue. Exceptions:
+- **Ready once …** gets the owner but stays in `backlog`. Name the condition in the
+  change list ("moves to ready when <condition>").
+- **Not ready** stays in `backlog`, even when the user asks for an owner.
+
 ## 2. Capacity first
 
 Work out who has room before looking at expertise:

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "walk through the todo and backlog stories for the current sprint, tell me what's actually ready and who of chuu/don/tiger/me should take each one. don't change anything in shortcut",
-      "expected_output": "Loads .claude/sprint-triage.yml and passes the health check; reads only tracker-shortcut.md and host-github.md; produces the report-template report with a readiness verdict and evidence per story (API contract check, newest PM comment, blockers) and an owner proposal with one evidence line each. Calls no tracker write tools.",
+      "expected_output": "Loads .claude/sprint-triage.yml and passes the health check; reads only tracker-shortcut.md and host-github.md; produces the report-template report with a readiness verdict and evidence per story (API contract check, newest PM comment, blockers), story concerns with an exact question each, and, as the last section, an owner proposal with one evidence line each plus the numbered change list. Drafts no comments. Calls no tracker write tools.",
       "files": []
     },
     {
@@ -22,7 +22,7 @@
     {
       "id": 5,
       "prompt": "jui added a bunch of stories to the sprint since planning. walk me through the new ones and tell me who could take them",
-      "expected_output": "Picks mid-sprint mode because a report with a snapshot for the current sprint exists; lists Added / Removed / Reopened against that snapshot (all states, not just To Do/Backlog); does not re-triage unchanged stories or propose changing existing owners; computes days left with workdays.sh and room per member including owned To Do stories; says whether the ready new stories fit, and if not drafts a swap question for the PM; saves a -mid report with a new snapshot.",
+      "expected_output": "Picks mid-sprint mode because a report with a snapshot for the current sprint exists; lists Added / Removed / Reopened against that snapshot (all states, not just To Do/Backlog); does not re-triage unchanged stories or propose changing existing owners; computes days left with workdays.sh and room per member including owned To Do stories; says whether the ready new stories fit, and if not, states by how many days and lists what could move out in the report without drafting any comment for the PM; ends the report with the suggested owners and the change list, where every new owner on a Ready story in Backlog is paired with a Backlog → To Do move (Ready-once and Not-ready stories stay in Backlog); saves a -mid report with a new snapshot.",
       "files": []
     },
     {

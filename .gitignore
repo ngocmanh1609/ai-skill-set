@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 # skill-creator eval runs
 *-workspace/
+# pr-review replay benchmark: built from a private repo, kept local only
+skills/developer-tools/pr-review/evals/replay-argus/

@@ -7,9 +7,10 @@ description: >
   and link direction, unanswered PM questions, scope already built in code), flags
   concerns for the PM, and suggests owners from git history, current load, and
   availability. Mid-sprint, it triages only the stories added or changed since the last
-  run, keeps existing owners, and checks whether the new work fits the days left. After
-  explicit approval it applies owner and state changes and posts comments, then
-  re-fetches to verify. Keeps a per-project config of tools and team, and offers to
+  run, keeps existing owners, and reports whether the new work fits the days left. The
+  report ends with the suggested owners and the change list built from them. After
+  explicit approval it applies owner and state changes (and story comments only when the
+  user asks for them), then re-fetches to verify. Keeps a per-project config of tools and team, and offers to
   create it on first use.
 when_to_use: >
   Use whenever the user wants to walk through, review, groom, refine, or triage sprint,
@@ -144,7 +145,13 @@ Mid-sprint: keep existing owners, and run the fit check from
 [references/mid-sprint.md](references/mid-sprint.md) before suggesting owners.
 
 Write the report with [references/report-template.md](references/report-template.md).
-It always ends with a **snapshot block**: every team story in the sprint, with its state
+The report has two parts the user acts on: the **story concerns** (questions for the
+PM about specific stories) and the **suggested owners**. The owner section comes last,
+with the numbered change list built from it. Capacity, fit, and what could move out of
+the sprint are information for the user. They stay in the report body and never become
+a tracker comment.
+
+The report always ends with a **snapshot block**: every team story in the sprint, with its state
 and owners. The next mid-sprint run compares against it, so don't skip it on a read-only
 run. Save the report to `<reports_dir>/<sprint id>-<YYYY-MM-DD>.md` (add `-mid` in
 mid-sprint mode). If the user's instructions ask for a plain-language pass (e.g. the
@@ -152,23 +159,32 @@ mid-sprint mode). If the user's instructions ask for a plain-language pass (e.g.
 
 ## 5. Approve
 
-Turn the proposal into a numbered change list. One line per tracker operation: story,
-field, current value → new value. Include the full text of each comment. Then ask the
-user which changes to apply (`AskUserQuestion`, multi-select by group: owners, state
-moves, comments). If the user already said exactly what to apply, their message is the
-approval: restate the list and go ahead.
+Use the change list at the end of the report: one line per tracker operation (story,
+field, current value → new value), grouped as owners and state moves. Then ask the user
+which changes to apply (`AskUserQuestion`, multi-select by group). If the user already
+said exactly what to apply, their message is the approval: restate the list and go ahead.
+
+A new owner on a **Ready** story in `backlog` comes with its `backlog → ready` move.
+Both go on the same line of the change list, and they are applied together (see
+[references/assignment-guide.md](references/assignment-guide.md), section 1). If the
+user approves the owner, the move is approved too, unless they say otherwise.
+
+Comments are not part of the default change list. Draft a story comment only when the
+user asks to send a story concern to the PM, and show its full text before posting.
 
 Watch for these before applying:
 - **Moving a Not-ready story to `ready`.** The ready column tells the team "start this".
   If the user asks for it, do it, but put what still blocks the story in the change log.
 - **How the tracker handles owners (T4).** Some trackers replace the whole owner list;
   others allow one assignee. Follow the adapter's rules so nobody is dropped by accident.
-- **Comments:** one per story. Mention the scope owner so they get notified (**T6**). Say
-  what you saw, why it matters, and the exact ask. Apply the user's plain-language rule
-  to the text, if they have one.
+- **Comments, when the user asks for them:** one per story, about that story's concern
+  only. Mention the scope owner so they get notified (**T6**). Say what you saw, why it
+  matters, and the exact ask. Apply the user's plain-language rule to the text, if they
+  have one. Never draft a comment about sprint capacity, overload, or which stories could
+  move out. That stays in the report.
 - Don't edit descriptions, links, estimates, or priorities unless the user asks. The PM
-  owns story content, so ask them in a comment instead. Moving stories out of the sprint
-  also waits for the PM's answer.
+  owns story content, so list the ask under story concerns instead. Don't move stories
+  out of the sprint unless the user asks.
 
 ## 6. Apply and verify
 

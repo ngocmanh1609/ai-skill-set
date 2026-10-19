@@ -1,0 +1,126 @@
+{
+  "skill_name": "pr-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "review PR 42 (run from a repo that has no .claude/pr-review.yml)",
+      "expected_output": "Says the config is missing and asks whether to create it; detects the code host from the git remote and the stack from manifests; reads only the matching stacks/*.md pack; finds commands in CLAUDE.md/CI; drafts a rules file where every rule has src: and grep: is last; stamps sources with rules_check.sh --stamp; shows YAML + rules and says whether the paths are gitignored; writes only after a yes; then continues the review.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "/pr-review 686",
+      "expected_output": "Runs pr_context.sh with the config's ignore_paths; guards the working tree and checks out with gh pr checkout; runs the analyze and mapped tests; runs rule_scan.sh and treats hits as leads; reads rules.md, not CONVENTIONS.md/ARCHITECTURE.md in full; does not dispatch the architecture agent and lists it under Not checked; presents numbered findings with placement notes and posts nothing before a selection.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Don pushed fixes to the PR I reviewed this morning, take another look",
+      "expected_output": "Picks incremental mode from pr_context.sh myLastReview; diffs with diff.sh --since <commit> limited to the PR's files; drops findings already in existingComments; header says 'incremental since <sha>'. If diff.sh exits 3, says history was rewritten and does a full review.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "review 681 --deep",
+      "expected_output": "Notices reviewableLines > large_pr.lines but, because of --deep, reads all reviewable files; dispatches architecture.reviewer with the report_only_prompt as the first line, the diff command, a PR summary, and the findings so far; verifies the agent's claims before presenting them.",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "post 1 and 3, and 2: use a nullable getter instead of defaulting to empty",
+      "expected_output": "Applies the revision to [2] in its own words, re-prints only [2], and asks again (2 was revised, not selected); for 1 and 3, rewrites comments per comment-style.md, checks that the head SHA still equals reviewedSha, runs post_review.sh --dry-run and then for real, and reports the review URL and the landed/moved-to-body rows.",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "/pr-review 203 (a prompt-library repo; the PR retires a plan path and changes a partial that other prompts include)",
+      "expected_output": "Writes the change model before reading the diff; runs git grep for the retired path over the whole repo and reports a stale use in a file the PR didn't touch with placement body; finds the includers of the changed partial and reads one rendered includer under composed_paths; walks one realistic run of the new command; reports an included instruction that contradicts the host prompt's constraint, anchored in the source file, never in the rendered one.",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "/pr-review 203 (one finding is a weak test regex that also exists in several other assertions)",
+      "expected_output": "Each finding shows exactly one 'Fix:' line. For the regex finding it is the better fix, with its axis (covers the other instances) and the counted number of other instances, because it fits in the PR. The regex was run in a scratch worktree under the scratchpad, not in the user's checkout, and the worktree is removed afterward. A better fix too large for the PR appears as an [S] suggestion starting 'Optional:', and that finding shows its minimal fix. A vague alternative ('consider refactoring the tests') is not presented. The posted comment carries the same single fix and never offers an alternative; 'use the smaller fix' is handled as a revision.",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "all",
+      "expected_output": "After a presentation with issues [1],[2] and suggestions [S1],[S2]: posts only 1 and 2 ('all' means issues only); S1 and S2 are not posted. With 'all+S' or '1,S2', suggestions are posted with text starting 'Optional:' and severity 'suggestion'. The Suggestions section never holds more than suggestions.max entries and is omitted when empty.",
+      "files": []
+    },
+    {
+      "id": 9,
+      "prompt": "review 203 (someone else approved commit eb53c6a; the author pushed 87361c9 after it)",
+      "expected_output": "Reads lastApproval from pr_context.sh; confirms eb53c6a is an ancestor of HEAD; reads diff.sh --since eb53c6a limited to the PR's files first; header says 'focus: since eb53c6a, approved by julien731'; still reviews the rest. Reads linked issue #196 with gh issue view and treats its acceptance criteria as scope. De-duplicates against reviewBodies as well as existingComments.",
+      "files": []
+    },
+    {
+      "id": 10,
+      "prompt": "(end of a review where rule R14's grep hit only allowed {{config.base_branch}} lines)",
+      "expected_output": "After posting (or on 'none'), proposes a one-line rules edit that adds an exclude: for the allowed keys to R14, shows the exact line, and changes the rules file only after a yes. In incremental mode also summarizes how the author handled earlier threads and offers declined ones as 'Don't flag' entries.",
+      "files": []
+    },
+    {
+      "id": 11,
+      "prompt": "review 203 --second-opinion=claude:sonnet",
+      "expected_output": "Takes tool and model from the flag (overriding second_opinion.use/model). Right after writing the change model, writes the PR-intent paragraph to a scratch file and starts scripts/second_opinion.sh claude:sonnet <base> --ignore … --summary <file> in the background, then continues its own review. In 2g it collects the report, treats each line as a candidate, verifies each one, and drops those that fail. On exit 3 it names the missing or logged-out tool and how to fix it, and continues without it; on exit 4 it says the tool wrote to its throwaway worktree and distrusts the report; on exit 5 it lists the failure under Not checked. With --second-opinion and no config and no value, it asks which installed tool to use.",
+      "files": []
+    },
+    {
+      "id": 12,
+      "prompt": "1,3 (after a presentation where [1] is minor, [2] is major, [3] is minor)",
+      "expected_output": "Re-derives the body status from the selected issues only: 'Fine to merge once the comments are addressed' (no major selected), not 'Needs changes before merge'. The dry run shows the final body: status, one clause on what was reviewed, a concern line only if the two comments share a cause. No 'Approved', 'LGTM', counts, or restated comments. The JSON passed to post_review.sh has a body field, and any outside-the-diff findings appear under it.",
+      "files": []
+    },
+    {
+      "id": 13,
+      "prompt": "/pr-review 210 (nothing survives verification)",
+      "expected_output": "Says no issues were found, lists what was checked and what wasn't, shows a draft body-only review ('Ready to merge from my side. Reviewed …'), and asks approve / comment / body: <text> / none. Posts nothing without approve or comment. On comment, runs post_review.sh with findings [] and the body, dry run first, event COMMENT; on approve, the same with event APPROVE. The body never says 'Approved' or 'LGTM'.",
+      "files": []
+    },
+    {
+      "id": 14,
+      "prompt": "/pr-review 215 (nothing survives verification; openFromOthers lists eeeeaa with 2 open threads, one outdated, and carol with changesRequested true and no open threads)",
+      "expected_output": "Lists both reviewers under 'Open threads from other reviewers': eeeeaa's two threads as path:line with the first line of each, the outdated one marked, and a 'requested changes in their latest review' line for carol. The draft body reads 'Ready to merge from my side, apart from @eeeeaa's and @carol's open comments. Reviewed …' without summarizing or judging their comments. Asks approve / comment / body / none, and posts with the event the user picks.",
+      "files": []
+    },
+    {
+      "id": 15,
+      "prompt": "1 approve (after a presentation where [1] is minor and S1 is a suggestion)",
+      "expected_output": "Doesn't post. Says an approval needs a selection with no issues, and [1] is an issue; asks the user to drop [1] ('S1 approve' or 'approve') or post 1 as a comment. Never builds a findings file with event APPROVE and a non-suggestion severity.",
+      "files": []
+    },
+    {
+      "id": 16,
+      "prompt": "approve (on a body-only review; between the presentation and posting, the author pushed a new commit)",
+      "expected_output": "Runs H6, sees the head is no longer reviewedSha, and stops before posting: says the approval would cover commits it hasn't read, and offers to review the new commits first (incremental) or to post the body as a comment. Doesn't call post_review.sh with event APPROVE.",
+      "files": []
+    },
+    {
+      "id": 17,
+      "prompt": "/pr-review 230 (the PR removes a fallback from a command and adds a hard stop when a precondition is missing; the description calls the stop deliberate; the rules file lists three kinds of input under \"Walkthrough inputs\")",
+      "expected_output": "Lists the removed fallback and the new stop as removed paths in the change model and ranks them with the decisions; for each, searches by behavior (docs and flows that describe the old behavior, each listed kind of input), not only for the removed sentence; walks through the command for every listed kind that reaches the stop, including one the PR doesn't name; reports a kind left with no route as a finding and answers the description's reasoning directly instead of accepting 'deliberate'.",
+      "files": []
+    },
+    {
+      "id": 18,
+      "prompt": "/pr-review 231 (a changed instruction tells the agent to stop and ask the user, but no step says where the answer goes; a dependents search for a removed step name returns hits in four files the PR didn't touch)",
+      "expected_output": "During the walkthrough, follows each branch of the decision point to where its result is recorded and who reads it next, and reports the answer that has no recorded place; marks every dependents hit stale or fine in the working notes before presenting, and reports the stale ones in untouched files with placement body.",
+      "files": []
+    },
+    {
+      "id": 19,
+      "prompt": "/pr-review 232 (one finding's fix rewrites a step of a prompt)",
+      "expected_output": "Proves the fix in a scratch worktree (render and tests) and also walks through the fixed text as the agent would, including its decision points; drops or reworks the fix if the walkthrough shows a gap, instead of presenting a fix that only builds.",
+      "files": []
+    },
+    {
+      "id": 20,
+      "prompt": "/pr-review 233 (after verification, one finding scores 75, one scores 60 because it depends on backend data that could not be confirmed, two score 40 and 50, and one unverified lead scores 25)",
+      "expected_output": "Lists the 75 and 60 findings under Issues Found as [1] and [2], each with its severity and score. Lists the 50 and 40 findings under Below the bar as [B1] and [B2], ordered by severity then score, each with its severity, score, placement, why it scored under the bar, and the minimal fix only. Drops the 25 lead, or lists it under Not checked, and never in either list. The selection prompt accepts B numbers and +B. Picking a B finding makes the event COMMENT and refuses approve, because it counts as an issue. Nothing is posted before the user selects.",
+      "files": []
+    }
+  ],
+  "quality_benchmark": "evals/replay-argus/PROTOCOL.md: blind replays of 8 real argus PR snapshots scored for recall, precision, and per-category blind spots. Run it before and after changing the review guide."
+}
